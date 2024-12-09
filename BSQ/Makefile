@@ -1,29 +1,44 @@
-SRCS		= srcs/main.c srcs/ft_strdup.c srcs/ft_squares.c srcs/ft_checkmaps.c srcs/ft_create_map.c
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: jutrera- <jutrera-@student.42madrid.com    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/12/09 12:35:42 by jutrera-          #+#    #+#              #
+#    Updated: 2024/12/09 12:35:43 by jutrera-         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-OBJS		= ${SRCS:.c=.o}
+NAME	= bsq
 
-HEAD		= includes
+SRCS	= srcs/main.c \
+		  srcs/ft_checkmap.c \
+		  srcs/ft_createmap.c \
+		  srcs/ft_findlargest.c \
+		  srcs/ft_utilities.c \
+		  srcs/ft_utilities2.c
+HEAD	= includes
+RM		= rm -f
+GCC		= gcc
+CFLAGS	= -Wall -Wextra -Werror 
+LEAKS	= -fsanitize=address
+OBJS	= ${SRCS:.c=.o}
 
-NAME		= bsq
+${NAME}	: ${OBJS}
+		  ${GCC} ${LEAKS} ${CFLAGS} -o ${NAME} ${OBJS}
 
-RM			= rm -f
+all		: ${NAME}
 
-GCC			= gcc
+.c.o	:
+		  ${GCC} ${CFLAGS} -c  $< -o ${<:.c=.o} -I ${HEAD}
 
-CFLAGS		= -Wall -Wextra -Werror
+clean	:
+		  rm -f ${OBJS}
 
-all:		${NAME}
+fclean	: clean
+		  rm -f ${NAME}
 
-.c.o:
-			${GCC} ${CFLAGS} -c  $< -o ${<:.c=.o} -I ${HEAD}
+re		: fclean all
 
-${NAME}:	${OBJS}
-			${GCC} ${CFLAGS} -o ${NAME} ${OBJS}
-
-clean:
-			rm -f ${OBJS}
-
-fclean:		clean
-			rm -f ${NAME}
-
-.PHONY:		all clean fclean
+.PHONY : all clean fclean re
