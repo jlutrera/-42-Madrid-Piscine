@@ -6,7 +6,7 @@
 /*   By: jutrera- <jutrera-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 20:39:35 by jutrera-          #+#    #+#             */
-/*   Updated: 2024/12/09 23:55:55 by jutrera-         ###   ########.fr       */
+/*   Updated: 2024/12/10 09:40:13 by jutrera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,11 @@ static int	ft_checkmaplines(int fd, int lines, char *s, char **map)
 			bytes_read = read(fd, &c, 1);
 		}
 		if (something_is_wrong(c, &width, map[len], s, bytes_read))
-			break;
+		{
+			len++;
+			map[len] = '\0';
+			return -1;
+		}
 		len++;
 		if (bytes_read == 0)
 			break;

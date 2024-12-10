@@ -6,7 +6,7 @@
 /*   By: jutrera- <jutrera-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 20:39:28 by jutrera-          #+#    #+#             */
-/*   Updated: 2024/12/09 18:02:26 by jutrera-         ###   ########.fr       */
+/*   Updated: 2024/12/10 09:53:46 by jutrera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ static char *read_data_map(int *num_lines)
     read(STDIN_FILENO, buffer, 100);
 	*num_lines = ft_atoi(buffer);
 	ft_printf("Character for empty: ");
-    read(STDIN_FILENO, buffer, 1);
+    read(STDIN_FILENO, buffer, 2);
 	data[0] = buffer[0];
     ft_printf("Character for obstacle: ");
-    read(STDIN_FILENO, buffer, 1);
+    read(STDIN_FILENO, buffer, 2);
 	data[1] = buffer[0];
     ft_printf("Character for filled: ");
-    read(STDIN_FILENO, buffer, 1);
+    read(STDIN_FILENO, buffer, 2);
 	data[2] = buffer[0];
 	return data;
 }
@@ -90,17 +90,22 @@ int ft_createmap()
 	if (data == NULL)
 		return -1;
 	if (checkifexists())
+	{
+		free(data);
 		return -1;
+	}
 	fd = open("./maps/madrid42", O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd == -1)
 	{
       	ft_printf("file error\n");
-        return -1;
+		free(data);
+	    return -1;
     }
     len = snprintf(buffer, 1024, "%d%c%c%c\n", num_lines, data[0], data[1], data[2]);
     write(fd, buffer, len);
 	ask_for_lines(fd, data, num_lines);
     close(fd);
     ft_printf("Map was created successfuly.\n");
+	free(data);
 	return fd;
 }

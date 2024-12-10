@@ -6,7 +6,7 @@
 /*   By: jutrera- <jutrera-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 20:39:16 by jutrera-          #+#    #+#             */
-/*   Updated: 2024/12/09 23:50:33 by jutrera-         ###   ########.fr       */
+/*   Updated: 2024/12/10 15:55:05 by jutrera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 # include <stdio.h>
 
 # define YELLOW "\033[0;33m"
-# define RED 	"\033[0;31m"
-# define GREEN 	"\033[0;32m"
 # define RESET 	"\033[0m"
 
 // ft_findlargest.c

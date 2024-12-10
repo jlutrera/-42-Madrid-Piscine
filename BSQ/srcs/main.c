@@ -6,7 +6,7 @@
 /*   By: jutrera- <jutrera-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 20:39:07 by jutrera-          #+#    #+#             */
-/*   Updated: 2024/12/09 23:50:41 by jutrera-         ###   ########.fr       */
+/*   Updated: 2024/12/10 09:46:02 by jutrera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	main(int argc, char **argv)
 		fd = ft_createmap();
 		if (fd == -1)
 			return (1);
-		ft_process("madrid42");
+		ft_process("./maps/madrid42");
 	}
 	else
 	{
