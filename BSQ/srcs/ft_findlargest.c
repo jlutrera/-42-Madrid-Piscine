@@ -102,7 +102,7 @@ char **find_largest(char **basemap, int lines, char *chars)
     values[2] = 0;
 	values[3] = 0;
 	values[4] = 0;
-	values[5] = ft_strlen(basemap[0]);
+	values[5] = ft_strlen(basemap[lines - 1]);
 	map = ft_createresultmap(basemap, lines);
 	if (!map)
 		return (NULL);
@@ -127,6 +127,7 @@ char **find_largest(char **basemap, int lines, char *chars)
 		while (--values[1] > values[4] - values[2])
 			map[values[0]][values[1]] = chars[2];
 	}
+	
 	ft_freemaps((char **)dp);
 	return (map);
 }
