@@ -1,54 +1,67 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   creator.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jutrera- <jutrera-@student.42madrid.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/30 21:22:23 by jutrera-          #+#    #+#             */
+/*   Updated: 2024/12/30 21:22:23 by jutrera-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-void generate_map(int lines, char empty, char obstacle, char fill, int width, const char *filename) {
-    FILE *file = fopen(filename, "w");
-    if (!file) {
-        perror("Error al abrir el archivo");
-        exit(EXIT_FAILURE);
-    }
+void	generate_map(char **argv, int lines, int width, FILE *file)
+{
+	int		i;
+	int		j;
 
-    // Escribir la primera línea con el formato requerido
-    fprintf(file, "%d%c%c%c\n", lines, empty, obstacle, fill);
-
-    // Generar el mapa aleatorio
-    srand(time(NULL)); // Inicializar la semilla para números aleatorios
-    for (int i = 0; i < lines; i++) {
-        for (int j = 0; j < width; j++) {
-            // Elegir aleatoriamente entre vacío y obstáculo
-            if (rand() % 4 == 0) { // Aproximadamente 25% de obstáculos
-                fputc(obstacle, file);
-            } else {
-                fputc(empty, file);
-            }
-        }
-        fputc('\n', file); // Nueva línea al final de cada fila
-    }
-
-    fclose(file);
-    printf("Mapa generado correctamente en el archivo: %s\n", filename);
+	fprintf(file, "%d%c%c%c\n", lines, argv[2][0], argv[3][0], argv[4][0]);
+	srand(time(NULL));
+	i = -1;
+	while (++i < lines)
+	{
+		j = -1;
+		while (++j < width)
+		{
+			if (rand() % 4 == 0)
+				fputc(argv[3][0], file);
+			else
+				fputc(argv[2][0], file);
+		}
+		fputc('\n', file);
+	}
+	fclose(file);
 }
 
-int main(int argc, char *argv[]) {
-    if (argc != 6) {
-        fprintf(stderr, "Uso: %s <número de líneas> <carácter de vacío> <carácter de obstáculo> <carácter de lleno> <ancho>\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
+int	main(int argc, char **argv)
+{
+	int		lines;
+	int		width;
+	FILE	*file;
 
-    int lines = atoi(argv[1]);
-    char empty = argv[2][0];
-    char obstacle = argv[3][0];
-    char fill = argv[4][0];
-    int width = atoi(argv[5]);
-
-    if (lines <= 0 || width <= 0) {
-        fprintf(stderr, "Error: El número de líneas y el ancho deben ser mayores a 0.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    const char *filename = "test"; // Nombre del archivo de salida
-    generate_map(lines, empty, obstacle, fill, width, filename);
-
-    return 0;
+	if (argc != 6)
+	{
+		printf("Syntax error: %s ", argv[0]);
+		printf("<filas> <vacío> <obstáculo> <lleno> <columnas>\n");
+		exit(EXIT_FAILURE);
+	}
+	lines = atoi(argv[1]);
+	width = atoi(argv[5]);
+	if (lines <= 0 || width <= 0)
+	{
+		printf("Error en argumentos\n");
+		exit(EXIT_FAILURE);
+	}
+	file = fopen("test", "w");
+	if (!file)
+	{
+		perror("Error al abrir el archivo");
+		exit(EXIT_FAILURE);
+	}
+	generate_map(argv, lines, width, file);
+	return (0);
 }

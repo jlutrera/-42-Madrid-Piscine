@@ -6,7 +6,7 @@
 #    By: jutrera- <jutrera-@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/09 12:35:42 by jutrera-          #+#    #+#              #
-#    Updated: 2024/12/09 12:35:43 by jutrera-         ###   ########.fr        #
+#    Updated: 2025/01/02 00:14:07 by jutrera-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ SRCS	= srcs/main.c \
 		  srcs/ft_createmap.c \
 		  srcs/ft_findlargest.c \
 		  srcs/ft_utilities.c \
-		  srcs/ft_utilities2.c
+		  srcs/ft_utilities2.c \
+		  srcs/ft_utilities3.c
 HEAD	= includes
 RM		= rm -f
 GCC		= gcc

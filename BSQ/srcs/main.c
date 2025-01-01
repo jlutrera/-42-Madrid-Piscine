@@ -6,13 +6,13 @@
 /*   By: jutrera- <jutrera-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 20:39:07 by jutrera-          #+#    #+#             */
-/*   Updated: 2024/12/10 09:46:02 by jutrera-         ###   ########.fr       */
+/*   Updated: 2025/01/01 23:26:52 by jutrera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bsq.h"
 
-static void printhorizontal(int k, char **map)
+static void	printhorizontal(int k, char **map)
 {
 	int	i;
 	int	width;
@@ -21,9 +21,8 @@ static void printhorizontal(int k, char **map)
 		ft_printf("┌─");
 	else
 		ft_printf("└─");
-
 	i = -1;
-	width = ft_strlen(map[0]) - 1; 
+	width = ft_strlen(map[0]);
 	while (++i < width)
 		ft_printf("─");
 	if (k == 1)
@@ -47,16 +46,15 @@ static void	ft_printmap(int t, char *name, char **map)
 	else
 		ft_printf(name);
 	printhorizontal(1, map);
-    i = -1;
-    while (map[++i])
-    {
-        ft_printf("│ ");
-        ft_printf(map[i]);
-        ft_printf(" │\n");
-    }
-    printhorizontal(2, map);
+	i = -1;
+	while (map[++i])
+	{
+		ft_printf("│ ");
+		ft_printf(map[i]);
+		ft_printf(" │\n");
+	}
+	printhorizontal(2, map);
 }
-
 
 static void	ft_process(char *filename)
 {
@@ -65,7 +63,7 @@ static void	ft_process(char *filename)
 	char	*chars;
 	int		lines;
 
-	chars = (char *)malloc (3 * sizeof(char));
+	chars = (char *)malloc (4 * sizeof(char));
 	if (!chars)
 		ft_printf("memory allocation error\n");
 	else
@@ -74,6 +72,7 @@ static void	ft_process(char *filename)
 		if (basemap)
 		{
 			ft_printmap(1, filename, basemap);
+			printf("chars: %s\n", chars);
 			resultmap = find_largest(basemap, lines, chars);
 			if (resultmap)
 				ft_printmap(0, "Solution:\n", resultmap);
@@ -108,5 +107,5 @@ int	main(int argc, char **argv)
 			ft_process(filename);
 		}
 	}
-	return 0;
+	return (0);
 }

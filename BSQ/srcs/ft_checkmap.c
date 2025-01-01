@@ -6,7 +6,7 @@
 /*   By: jutrera- <jutrera-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 20:39:35 by jutrera-          #+#    #+#             */
-/*   Updated: 2024/12/10 09:40:13 by jutrera-         ###   ########.fr       */
+/*   Updated: 2025/01/02 00:14:28 by jutrera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	ft_checkfirstline(int fd, char **chars)
 		read(fd, &c, 1);
 	}
 	if (l == 0)
-		return -2;
+		return (-2);
 	i = 0;
 	while (c != '\n' && i < 3)
 	{
@@ -34,94 +34,65 @@ static int	ft_checkfirstline(int fd, char **chars)
 		read(fd, &c, 1);
 		i++;
 	}
-	if (i == 3 && ((*chars)[0] != (*chars)[1] && (*chars)[1] != (*chars)[2] && (*chars)[0] != (*chars)[2]))
-		return l;
-	return -2;
+	(*chars)[i] = '\0';
+	if (i == 3 && ((*chars)[0] != (*chars)[1] && (*chars)[1] != (*chars)[2] &&
+			(*chars)[0] != (*chars)[2]))
+		return (l);
+	return (-2);
 }
 
-static int	something_is_wrong(char c, int *width, char *line, char *s, size_t bytes_read)
+static int	is_not_valid(char c, char *s, size_t bytes_read)
+{
+	if (c != s[0] && c != s[1] && c != '\n' && bytes_read > 0)
+		return (1);
+	return (0);
+}
+
+static int	something_is_wrong(int *width, char *line)
 {
 	int	len;
 
-	if (c != s[0] && c != s[1] && c != '\n' && bytes_read > 0)
-		return 1;
 	len = ft_strlen(line);
 	if (*width == 0)
 		*width = len;
 	if (*width != len)
-		return 1;
-	return 0;
+		return (1);
+	return (0);
 }
+
 static int	ft_checkmaplines(int fd, int lines, char *s, char **map)
 {
 	char	c;
-	int		len;
-	int		width;
+	int		d[2];
 	size_t	bytes_read;
-	
-	len = 0;
-	width = 0;
+
+	d[0] = 0;
+	d[1] = 0;
 	while (1)
 	{
 		bytes_read = read(fd, &c, 1);
-		if (bytes_read == 0 || (c != s[0] && c != s[1]))
-			break;
-		map[len] = (char *)malloc(1 * sizeof(char));
-		if (!map[len])
-			return -2;
-		map[len][0] = '\0';
+		if (bytes_read <= 0 || (c != s[0] && c != s[1]))
+			break ;
+		map[d[0]] = (char *)calloc(1, sizeof(char));
+		if (!map[d[0]])
+			return (-2);
 		while (c != '\n' && bytes_read > 0 && (c == s[0] || c == s[1]))
-		{
-			map[len] = ft_addchartostr(map[len], c);
-			if (!map[len])
-				return -2;
-			bytes_read = read(fd, &c, 1);
-		}
-		if (something_is_wrong(c, &width, map[len], s, bytes_read))
-		{
-			len++;
-			map[len] = '\0';
-			return -1;
-		}
-		len++;
-		if (bytes_read == 0)
-			break;
+			if (ft_addchartostr(&map[d[0]], &c, &bytes_read, fd))
+				return (-2);
+		if (is_not_valid(c, s, bytes_read)
+			|| something_is_wrong(&d[1], map[++d[0] - 1]))
+			return (map[d[0]] = '\0', -1);
+		if (bytes_read <= 0)
+			break ;
 	}
-	map[len] = '\0';
-	if (len != lines)
-		return -1;
-	return 0;
+	map[d[0]] = '\0';
+	return (-1 * (d[0] != lines));
 }
 
-static int there_are_errors(int error, int fd, char **map)
+char	**ft_checkmap(char *filename, int *lines, char **chars)
 {
-	if (error == -2)
-	{
-		ft_freemaps(map);
-		close(fd);
-		ft_printf("memory allocation error\n");
-		return 1;
-	}
-	if (error == -1)
-	{
-		ft_freemaps(map);
-		close(fd);
-		ft_printf("map error\n");
-		return 1;
-	}
-	if (error == -3)
-	{
-		ft_printf("file error\n");
-		return 1;
-	}
-	close(fd);
-	return 0;
-}
-
-char **ft_checkmap(char *filename, int *lines, char **chars)
-{
-	int 	fd;
-	int 	error;
+	int		fd;
+	int		error;
 	char	**map;
 
 	map = NULL;
@@ -140,7 +111,7 @@ char **ft_checkmap(char *filename, int *lines, char **chars)
 			error = ft_checkmaplines(fd, *lines, *chars, map);
 	}
 	if (there_are_errors(error, fd, map))
-		return NULL;
+		return (NULL);
 	else
-		return map;
+		return (map);
 }

@@ -12,28 +12,10 @@
 
 #include "bsq.h"
 
-static void	ft_copymap(char **map, char **resultmap, int lines)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	while (++i < lines)
-	{
-		j = 0;
-		while (map[i][j] != '\0')
-		{
-			resultmap[i][j] = map[i][j];
-			j++;
-		}
-		resultmap[i][j] = '\0';
-	}
-}
-
 static char	**ft_createresultmap(char **map, int lines)
 {
 	char	**resultmap;
-	int 	i;
+	int		i;
 
 	resultmap = (char **)malloc((lines + 1) * sizeof(char *));
 	if (!resultmap)
@@ -54,11 +36,24 @@ static char	**ft_createresultmap(char **map, int lines)
 	return (resultmap);
 }
 
-static void	searchingsqaure(char **map, int **dp, int values[], char *chars)
+static int	ft_min(int i, int j, int **dp)
 {
-	int min1;
-	int min2;
+	int	min1;
+	int	min2;
 
+	if (dp[i - 1][j - 1] < dp[i - 1][j])
+		min1 = dp[i - 1][j - 1];
+	else
+		min1 = dp[i - 1][j];
+	if (min1 < dp[i][j - 1])
+		min2 = min1;
+	else
+		min2 = dp[i][j - 1];
+	return (min2 + 1);
+}
+
+static void	searchingsquare(char **map, int **dp, int values[], char *chars)
+{
 	values[1] = -1;
 	while (++values[1] < values[5])
 	{
@@ -69,21 +64,11 @@ static void	searchingsqaure(char **map, int **dp, int values[], char *chars)
 		else
 		{
 			if (map[values[0]][values[1]] == chars[0])
-			{
-				if (dp[values[0] - 1][values[1] - 1] < dp[values[0] - 1][values[1]])
-					min1 = dp[values[0] - 1][values[1] - 1];
-				else
-					min1 = dp[values[0] - 1][values[1]];
-				if (min1 < dp[values[0]][values[1] - 1])
-					min2 = min1;
-				else
-					min2 = dp[values[0]][values[1] - 1];
-				dp[values[0]][values[1]] = 1 + min2;
-			}
+				dp[values[0]][values[1]] = ft_min(values[0], values[1], dp);
 			else
 				dp[values[0]][values[1]] = 0;
 		}
-		if (dp[values[0]][values[1]] > values[2]) 
+		if (dp[values[0]][values[1]] > values[2])
 		{
 			values[2] = dp[values[0]][values[1]];
 			values[3] = values[0];
@@ -92,34 +77,42 @@ static void	searchingsqaure(char **map, int **dp, int values[], char *chars)
 	}
 }
 
-char **find_largest(char **basemap, int lines, char *chars)
+static int	**alloc_dp_search(int lines, int values[], char **map, char *chars)
 {
-    int **dp;
-	char **map;
-	int values[6]; // 0 = i, 1 = j, 2 = max_size, 3 = end_line, 4 = end_col, 5 = cols
+	int	**dp;
 
-	values[0] = -1;
-    values[2] = 0;
-	values[3] = 0;
-	values[4] = 0;
-	values[5] = ft_strlen(basemap[lines - 1]);
-	map = ft_createresultmap(basemap, lines);
-	if (!map)
-		return (NULL);
 	dp = (int **)malloc(lines * sizeof(int *));
 	if (!dp)
 		return (NULL);
-    while (++values[0] < lines)
+	values[0] = -1;
+	values[2] = 0;
+	values[3] = 0;
+	values[4] = 0;
+	while (++values[0] < lines)
 	{
 		dp[values[0]] = (int *)malloc(values[5] * sizeof(int));
 		if (!dp[values[0]])
 		{
-			ft_freemaps((char **)dp);
+			free_dp(dp, values[0] - 1);
 			ft_freemaps(map);
 			return (NULL);
 		}
-		searchingsqaure(map, dp, values, chars);
- 	}
+		searchingsquare(map, dp, values, chars);
+	}
+	return (dp);
+}
+
+char	**find_largest(char **basemap, int lines, char *chars)
+{
+	int		**dp;
+	char	**map;
+	int		values[6];
+
+	values[5] = ft_strlen(basemap[lines - 1]);
+	map = ft_createresultmap(basemap, lines);
+	if (!map)
+		return (NULL);
+	dp = alloc_dp_search(lines, values, map, chars);
 	values[0] = values[3] + 1;
 	while (--values[0] > values[3] - values[2])
 	{
@@ -127,7 +120,6 @@ char **find_largest(char **basemap, int lines, char *chars)
 		while (--values[1] > values[4] - values[2])
 			map[values[0]][values[1]] = chars[2];
 	}
-	
-	ft_freemaps((char **)dp);
+	free_dp(dp, lines);
 	return (map);
 }

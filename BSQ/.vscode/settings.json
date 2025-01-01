@@ -50,6 +50,12 @@
     "**/.vscode",
     "**/.vscode/**"
   ],
+  "codam-norminette-3.command": "norminette",
+  "codam-norminette-3.commandTimeoutMs": 10000,
+  "codam-norminette-3.fileregex": "\\.[ch]$",
+  "codam-norminette-3.ignoreErrors": [],
+  "codam-norminette-3.highlight-color": "rgba(255, 0, 0, 0.2)",
+  "codam-norminette-3.displayErrorName": false,
   "C_Cpp_Runner.useAddressSanitizer": false,
   "C_Cpp_Runner.useUndefinedSanitizer": false,
   "C_Cpp_Runner.useLeakSanitizer": false,
